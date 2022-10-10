@@ -10,6 +10,6 @@ public class SetHScore : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        tmp.text = "Best\nScore: " + RealMainManager.Instance.HighScore.ToString() + $"\n({RealMainManager.Instance.HighScorer})";
+        tmp.text = "Best\nScore: " + RealMainManager.Instance.HighScores[0].score.ToString() + "\n(" + RealMainManager.Instance.HighScores[0].name + ")";
     }
 }

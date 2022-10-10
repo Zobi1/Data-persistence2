@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 public class RealMainManager : MonoBehaviour
 {
 
     public static RealMainManager Instance;
     public string PlayerName;
-    public int HighScore;
-    public string HighScorer;
+    public PlayerScore[] HighScores = new PlayerScore[] { new PlayerScore("John Doe", 0), new PlayerScore("John Doe", 0), new PlayerScore("John Doe", 0), new PlayerScore("John Doe", 0), new PlayerScore("John Doe", 0)};
     private string SavePath;
 
     private void Awake()
     {
         SavePath = Application.persistentDataPath + "/save.json";
+        Debug.Log("Path = " + SavePath);
 
 
         if (Instance != null)
@@ -32,8 +33,19 @@ public class RealMainManager : MonoBehaviour
     class SaveData
     {
         public string PlayerName;
-        public int HighScore;
-        public string HighScorer;
+        public PlayerScore[] HighScores;
+    }
+    [System.Serializable]
+    public class PlayerScore
+    {
+        public int score;
+        public string name;
+
+        public PlayerScore(string name, int score)
+        {
+            this.name = name;
+            this.score = score;
+        }
     }
 
     public void SaveAll()
@@ -41,8 +53,7 @@ public class RealMainManager : MonoBehaviour
         SaveData data = new SaveData();
 
         data.PlayerName = PlayerName;
-        data.HighScore = HighScore;
-        data.HighScorer = HighScorer;
+        data.HighScores = HighScores;
 
         string jsonData = JsonUtility.ToJson(data);
 
@@ -57,9 +68,22 @@ public class RealMainManager : MonoBehaviour
             string jsonData = File.ReadAllText(SavePath);
             SaveData data = JsonUtility.FromJson<SaveData>(jsonData);
             PlayerName = data.PlayerName;
-            HighScore = data.HighScore;
-            HighScorer = data.HighScorer;
+            HighScores = data.HighScores;
         }
+
+    }
+
+    public void UpdateScore(PlayerScore newScore)
+    {
+        if (newScore.score > HighScores[4].score)
+        { HighScores[4] = newScore; }
+        
+        var sorted = HighScores.OrderByDescending(ob => ob.score).ToArray();
+        HighScores = sorted;
+
+        SaveAll();
+
+
 
     }
 

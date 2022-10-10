@@ -69,11 +69,6 @@ public class MainManager : MonoBehaviour
     {
         m_Points += point;
         ScoreText.text = $"Score : {m_Points}";
-        if (m_Points > RealMainManager.Instance.HighScore)
-        { RealMainManager.Instance.HighScore = m_Points;
-            RealMainManager.Instance.HighScorer = RealMainManager.Instance.PlayerName;
-            RealMainManager.Instance.SaveAll();
-        }
             
     }
 
@@ -81,6 +76,7 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        RealMainManager.Instance.UpdateScore(new RealMainManager.PlayerScore(RealMainManager.Instance.PlayerName, m_Points));
 
     }
 
